@@ -1,3 +1,14 @@
+/* 
+Mongoose User model. User object holds....
+public: username, password, name, email, phone, street address, city, state, notes
+private: id, admin notes
+
+
+*/
+
+
+
+
 var mongoose = require('mongoose'); // Import Mongoose Package
 var Schema = mongoose.Schema; // Assign Mongoose Schema function to variable
 var bcrypt = require('bcrypt-nodejs'); // Import Bcrypt Package
@@ -19,7 +30,7 @@ var nameValidator = [
 ];
 
 // User E-mail Validator
-var emailValidator = [
+/* var emailValidator = [
     validate({
         validator: 'matches',
         arguments: /^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/,
@@ -29,6 +40,19 @@ var emailValidator = [
         validator: 'isLength',
         arguments: [3, 40],
         message: 'Email should be between {ARGS[0]} and {ARGS[1]} characters'
+    })
+]; */
+
+// User phone number validator
+var phoneValidator =[
+    validate({
+        validator: 'isLength',
+        arguments: [10],
+        message: 'Invalid number length'   
+    }),
+    validate({
+        validator: 'isInt',
+        message: 'Phone number can only contain digits'    
     })
 ];
 
@@ -65,14 +89,17 @@ var UserSchema = new Schema({
     username: { type: String, lowercase: true, required: true, unique: true, validate: usernameValidator },
     password: { type: String, required: true, validate: passwordValidator, select: false },
     email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
+    phone: { type: Number, validate: phoneValidator},
     active: { type: Boolean, required: true, default: false },
     id: { type: Number, required: true },
     streetAddress: String,
     city: String,
     state: String,
+    publicnotex: String,
+    adminnotes: String,
     temporarytoken: { type: String, required: true },
     resettoken: { type: String, required: false },
-    permission: { type: String, required: true, default: 'moderator' }
+    permission: { type: String, required: true, default: 'Customer' }
 });
 
 // Middleware to ensure password is encrypted before saving user to database

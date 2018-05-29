@@ -48,6 +48,8 @@ module.exports = function(router) {
                             res.json({ success: false, message: err.errors.name.message }); // Display error in validation (name)
                         } else if (err.errors.email) {
                             res.json({ success: false, message: err.errors.email.message }); // Display error in validation (email)
+                        } else if (err.errors.phone) {
+                            res.json({ success: false, message: err.errors.phone.message }); // Display error in validation (username)
                         } else if (err.errors.username) {
                             res.json({ success: false, message: err.errors.username.message }); // Display error in validation (username)
                         } else if (err.errors.password) {
