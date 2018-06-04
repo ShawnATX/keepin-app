@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { UsersComponent } from './users/users.component';
-import { HomeComponent } from './home/home.component';
+import { UserComponent } from '../users/user.component';
 import { AuthGuard } from './auth-guard.service';
-import { ErrorPageComponent } from './error-page/error-page.component';
+import { ErrorPageComponent } from '../errorpage/errorpage.component';
 
 const appRoutes: Routes = [
-  { path: 'users', component: UsersComponent },
-  // { path: 'not-found', component: PageNotFoundComponent },
+  { path: 'userhome', component: UserComponent },
   { path: 'not-found', component: ErrorPageComponent, data: {message: 'Page not found!'} },
   { path: '**', redirectTo: '/not-found' }
 ];
