@@ -8,6 +8,7 @@ import { AuthGuard } from './auth-guard.service';
 import { UserComponent } from './users/user.component';
 import { RegisterComponent } from './users/register/register.component';
 import { ErrorPageComponent } from './errorpage/errorpage.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { ErrorPageComponent } from './errorpage/errorpage.component';
     AppComponent,
     UserComponent,
     RegisterComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule

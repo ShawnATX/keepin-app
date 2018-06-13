@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { UserLogin } from '../login/login.component';
 import { UserComponent } from '../users/user.component';
-import { AuthGuard } from './auth-guard.service';
+import { AuthGuard } from '../auth-guard.service';
 import { ErrorPageComponent } from '../errorpage/errorpage.component';
+
 
 const appRoutes: Routes = [
   { path: 'userhome', component: UserComponent },
