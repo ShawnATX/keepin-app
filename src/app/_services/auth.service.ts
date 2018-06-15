@@ -8,6 +8,6 @@ export class AuthService {
     }
 
     isAuthenticated(){
-     user = user;
+     //user = user;
     }
   }

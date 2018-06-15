@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { UserLogin } from '../login/login.component';
+import { LoginComponent } from '../login/login.component';
 import { UserComponent } from '../users/user.component';
 import { AuthGuard } from '../auth-guard.service';
 import { ErrorPageComponent } from '../errorpage/errorpage.component';
@@ -9,6 +9,7 @@ import { ErrorPageComponent } from '../errorpage/errorpage.component';
 
 const appRoutes: Routes = [
   { path: 'userhome', component: UserComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'not-found', component: ErrorPageComponent, data: {message: 'Page not found!'} },
   { path: '**', redirectTo: '/not-found' }
 ];

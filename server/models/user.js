@@ -2,8 +2,6 @@
 Mongoose User model. User object holds....
 public: username, password, name, email, phone, street address, city, state, notes
 private: id, admin notes
-
-
 */
 
 
@@ -19,12 +17,12 @@ var validate = require('mongoose-validator'); // Import Mongoose Validator Plugi
 var nameValidator = [
     validate({
         validator: 'matches',
-        arguments: /^(([a-zA-Z]{3,20})+[ ]+([a-zA-Z]{3,20})+)+$/,
-        message: 'Name must be at least 3 characters, max 30, no special characters or numbers, must have space in between name.'
+        arguments: /^(([a-zA-Z]{3,20})+)+$/,
+        message: 'Name must be at least 1 characters, max 20, no special characters or numbers'
     }),
     validate({
         validator: 'isLength',
-        arguments: [3, 20],
+        arguments: [1, 20],
         message: 'Name should be between {ARGS[0]} and {ARGS[1]} characters'
     })
 ];
@@ -85,17 +83,18 @@ var passwordValidator = [
 
 // User Mongoose Schema
 var UserSchema = new Schema({
-    name: { type: String, required: true, validate: nameValidator },
+    firstname: { type: String, required: true, validate: nameValidator },
+    lastname: { type: String, required: true, validate: nameValidator },
     username: { type: String, lowercase: true, required: true, unique: true, validate: usernameValidator },
     password: { type: String, required: true, validate: passwordValidator, select: false },
     email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
     phone: { type: Number, validate: phoneValidator},
     active: { type: Boolean, required: true, default: false },
-    id: { type: Number, required: true },
-    streetAddress: String,
+    userid: { type: Number, required: true },
+    streetaddress: String,
     city: String,
     state: String,
-    publicnotex: String,
+    publicnotes: String,
     adminnotes: String,
     temporarytoken: { type: String, required: true },
     resettoken: { type: String, required: false },

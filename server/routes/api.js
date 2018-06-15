@@ -2,41 +2,41 @@ var User = require('../models/user'); // Import User Model
 var jwt = require('jsonwebtoken'); // Import JWT Package
 var secret = 'keepinclean'; // Create custom secret for use in JWT
 var nodemailer = require('nodemailer'); // Import Nodemailer Package
-var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer Sengrid Transport Package
+// var sgTransport = require('nodemailer-sendgrid-transport'); // Import Nodemailer Sengrid Transport Package
 
 module.exports = function(router) {
-
-    // Start Sendgrid Configuration Settings (Use only if using sendgrid)
-    // var options = {
-    //     auth: {
-    //         api_user: 'dbrian332', // Sendgrid username
-    //         api_key: 'PAssword123!@#' // Sendgrid password
-    //     }
-    // };
 
     // Nodemailer options (use with g-mail or SMTP)
     var client = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
             user: 'admin@keepinitcleanhousekeeping.com', // Your email address
-            pass: 'PAssword123!@#' // Your password
+            pass: 'PAssword123!@#' // set password in production
         },
         tls: { rejectUnauthorized: false }
-    });
-    // var client = nodemailer.createTransport(sgTransport(options)); // Use if using sendgrid configuration
-    // End Sendgrid Configuration Settings  
+    });  
 
     // Route to register new users  
     router.post('/users', function(req, res) {
-        var user = new User(); // Create new User object
-        user.username = req.body.username; // Save username from request to User object
-        user.password = req.body.password; // Save password from request to User object
-        user.email = req.body.email; // Save email from request to User object
-        user.name = req.body.name; // Save name from request to User object
+        var user = new User(); 
+        user.username = req.body.username;
+        user.password = req.body.password;
+        user.email = req.body.email;
+        user.firstname = req.body.firstname; 
+        user.lastname = req.body.lastname;
+        user.userid = req.body.userid;
+        uuser.phone = req.body.phone; 
+        user.active = req.body.active;
+        user.streetaddress = req.body.streetaddress;
+        user.city = req.body.city;
+        user.state = req.body.state;
+        user.publicnotes = req.body.publicnotes;
+        user.adminnotes = req.body.adminnotes;
+        user.resettoken = req.body.resettoken;
         user.temporarytoken = jwt.sign({ username: user.username, email: user.email }, secret, { expiresIn: '24h' }); // Create a token for activating account through e-mail
 
         // Check if request is valid and not empty or null
-        if (req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '' || req.body.name === null || req.body.name === '') {
+        if (req.body.username === null || req.body.username === '' || req.body.password === null || req.body.password === '' || req.body.email === null || req.body.email === '') {
             res.json({ success: false, message: 'Ensure username, email, and password were provided' });
         } else {
             // Save new user to database
@@ -45,7 +45,7 @@ module.exports = function(router) {
                     // Check if any validation errors exists (from user model)
                     if (err.errors !== null) {
                         if (err.errors.name) {
-                            res.json({ success: false, message: err.errors.name.message }); // Display error in validation (name)
+                            res.json({ success: false, message: err.errors.firstname.message }); // Display error in validation (firstname)
                         } else if (err.errors.email) {
                             res.json({ success: false, message: err.errors.email.message }); // Display error in validation (email)
                         } else if (err.errors.phone) {
@@ -72,11 +72,11 @@ module.exports = function(router) {
                 } else {
                     // Create e-mail object to send to user
                     var email = {
-                        from: 'Keepin It Clean, cruiserweights@zoho.com',
+                        from: 'Keepin It Clean, admin@keepinitcleanhousekeeping.com',
                         to: [user.email, 'gugui3z24@gmail.com'],
                         subject: 'Your Activation Link',
-                        text: 'Hello ' + user.name + ', thank you for registering at Keepin It Clean. Please click on the following link to complete your activation: http://www.herokutestapp3z24.com/activate/' + user.temporarytoken,
-                        html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at Keepin It Clean. Please click on the link below to complete your activation:<br><br><a href="http://www.herokutestapp3z24.com/activate/' + user.temporarytoken + '">http://www.herokutestapp3z24.com/activate/</a>'
+                        text: 'Hello ' + user.name + ', thank you for registering at Keepin It Clean. Please click on the following link to complete your activation: ##' + user.temporarytoken,
+                        html: 'Hello<strong> ' + user.name + '</strong>,<br><br>Thank you for registering at Keepin It Clean. Please click on the link below to complete your activation:<br><br><a href="##' + user.temporarytoken + '">##</a>'
                     };
                     // Function to send e-mail to the user
                     client.sendMail(email, function(err, info) {
@@ -99,8 +99,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -131,8 +131,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'Keepin It Clean, admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -164,8 +164,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -210,8 +210,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -244,7 +244,7 @@ module.exports = function(router) {
                             } else {
                                 // If save succeeds, create e-mail object
                                 var email = {
-                                    from: 'Keepin It Clean, cruiserweights@zoho.com',
+                                    from: 'admin@keepinitcleanhousekeeping.com',
                                     to: user.email,
                                     subject: 'Account Activated',
                                     text: 'Hello ' + user.name + ', Your account has been successfully activated!',
@@ -269,8 +269,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -314,8 +314,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -339,7 +339,7 @@ module.exports = function(router) {
                     } else {
                         // If user successfully saved to database, create e-mail object
                         var email = {
-                            from: 'Keepin It Clean, cruiserweights@zoho.com',
+                            from: 'admin@keepinitcleanhousekeeping.com',
                             to: user.email,
                             subject: 'Activation Link Request',
                             text: 'Hello ' + user.name + ', You recently requested a new account activation link. Please click on the following link to complete your activation: https://immense-dusk-71112.herokuapp.com/activate/' + user.temporarytoken,
@@ -358,7 +358,7 @@ module.exports = function(router) {
 
     // Route to send user's username to e-mail
     router.get('/resetusername/:email', function(req, res) {
-        User.findOne({ email: req.params.email }).select('email name username').exec(function(err, user) {
+        User.findOne({ email: req.params.email }).select('email firstname username').exec(function(err, user) {
             if (err) {
                 res.json({ success: false, message: err }); // Error if cannot connect
             } else {
@@ -367,11 +367,11 @@ module.exports = function(router) {
                 } else {
                     // If e-mail found in database, create e-mail object
                     var email = {
-                        from: 'Localhost Staff, cruiserweights@zoho.com',
+                        from: 'admin@keepinitcleanhousekeeping.com',
                         to: user.email,
                         subject: 'Localhost Username Request',
-                        text: 'Hello ' + user.name + ', You recently requested your username. Please save it in your files: ' + user.username,
-                        html: 'Hello<strong> ' + user.name + '</strong>,<br><br>You recently requested your username. Please save it in your files: ' + user.username
+                        text: 'Hello ' + user.firstname + ', You recently requested your username. Please save it in your files: ' + user.username,
+                        html: 'Hello<strong> ' + user.firstname + '</strong>,<br><br>You recently requested your username. Please save it in your files: ' + user.username
                     };
 
                     // Function to send e-mail to user
@@ -394,8 +394,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -424,7 +424,7 @@ module.exports = function(router) {
                         } else {
                             // Create e-mail object to send to user
                             var email = {
-                                from: 'Keepin It Clean, cruiserweights@zoho.com',
+                                from: 'Keepin It Clean, admin@keepinitcleanhousekeeping.com',
                                 to: user.email,
                                 subject: 'Reset Password Request',
                                 text: 'Hello ' + user.name + ', You recently request a password reset link. Please click on the link below to reset your password:<br><br><a href="http://www.herokutestapp3z24.com/reset/' + user.resettoken,
@@ -453,8 +453,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -493,8 +493,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -522,7 +522,7 @@ module.exports = function(router) {
                         } else {
                             // Create e-mail object to send to user
                             var email = {
-                                from: 'Keepin It Clean, cruiserweights@zoho.com',
+                                from: 'admin@keepinitcleanhousekeeping.com',
                                 to: user.email,
                                 subject: 'Password Recently Reset',
                                 text: 'Hello ' + user.name + ', This e-mail is to notify you that your password was recently reset at localhost.com',
@@ -571,8 +571,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -605,8 +605,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -638,8 +638,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -659,8 +659,8 @@ module.exports = function(router) {
                     if (err) {
                         // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                         var email = {
-                            from: 'Keepin It Clean, cruiserweights@zoho.com',
-                            to: 'gugui3z24@gmail.com',
+                            from: 'admin@keepinitcleanhousekeeping.com',
+                            to: 'admin@keepinitcleanhousekeeping.com',
                             subject: 'Error Logged',
                             text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                             html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -705,8 +705,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -735,8 +735,8 @@ module.exports = function(router) {
                             if (err) {
                                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                                 var email = {
-                                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                                    to: 'gugui3z24@gmail.com',
+                                    from: 'admin@keepinitcleanhousekeeping.com',
+                                    to: 'admin@keepinitcleanhousekeeping.com',
                                     subject: 'Error Logged',
                                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -768,8 +768,8 @@ module.exports = function(router) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -796,8 +796,8 @@ module.exports = function(router) {
                             if (err) {
                                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                                 var email = {
-                                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                                    to: 'gugui3z24@gmail.com',
+                                    from: 'admin@keepinitcleanhousekeeping.com',
+                                    to: 'admin@keepinitcleanhousekeeping.com',
                                     subject: 'Error Logged',
                                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -832,17 +832,25 @@ module.exports = function(router) {
     // Route to update/edit a user
     router.put('/edit', function(req, res) {
         var editUser = req.body._id; // Assign _id from user to be editted to a variable
-        if (req.body.name) var newName = req.body.name; // Check if a change to name was requested
+        if (req.body.firstname) var newFirstName = req.body.firstname; // Check if a change to name was requested
+        if (req.body.lastname) var newLastName = req.body.lastname; // Check if a change to name was requested
         if (req.body.username) var newUsername = req.body.username; // Check if a change to username was requested
         if (req.body.email) var newEmail = req.body.email; // Check if a change to e-mail was requested
+        if (req.body.phone) var newPhone = req.body.phone; // **NEED TO IMP** Check if a change to e-mail was requested
+        if (req.body.active) var newActive = req.body.active; // **NEED TO IMP** Check if a change to e-mail was requested
+        if (req.body.streetaddress) var newStreetAddress = req.body.streetaddress; // **NEED TO IMP** Check if a change to e-mail was requested
+        if (req.body.city) var newCity = req.body.city; // **NEED TO IMP** Check if a change to e-mail was requested
+        if (req.body.state) var newState = req.body.state; // **NEED TO IMP** Check if a change to e-mail was requested
+        if (req.body.publicnotes) var newPublicNotes = req.body.publicnotes; // **NEED TO IMP** Check if a change to e-mail was requested
+        if (req.body.adminnotes) var newAdminNotes = req.body.Adminnotes; // **NEED TO IMP** Check if a change to e-mail was requested
         if (req.body.permission) var newPermission = req.body.permission; // Check if a change to permission was requested
         // Look for logged in user in database to check if have appropriate access
         User.findOne({ username: req.decoded.username }, function(err, mainUser) {
             if (err) {
                 // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                 var email = {
-                    from: 'Keepin It Clean, cruiserweights@zoho.com',
-                    to: 'gugui3z24@gmail.com',
+                    from: 'admin@keepinitcleanhousekeeping.com',
+                    to: 'admin@keepinitcleanhousekeeping.com',
                     subject: 'Error Logged',
                     text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                     html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -862,8 +870,8 @@ module.exports = function(router) {
                 if (!mainUser) {
                     res.json({ success: false, message: "no user found" }); // Return error
                 } else {
-                    // Check if a change to name was requested
-                    if (newName) {
+                    // Check if a change to first name was requested
+                    if (newFirstName) {
                         // Check if person making changes has appropriate access
                         if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
                             // Look for user in database
@@ -871,8 +879,8 @@ module.exports = function(router) {
                                 if (err) {
                                     // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                                     var email = {
-                                        from: 'Keepin It Clean, cruiserweights@zoho.com',
-                                        to: 'gugui3z24@gmail.com',
+                                        from: 'admin@keepinitcleanhousekeeping.com',
+                                        to: 'admin@keepinitcleanhousekeeping.com',
                                         subject: 'Error Logged',
                                         text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                                         html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -908,6 +916,52 @@ module.exports = function(router) {
                             res.json({ success: false, message: 'Insufficient Permissions' }); // Return error
                         }
                     }
+                    // Check if a change to first name was requested
+                    if (newLastName) {
+                        // Check if person making changes has appropriate access
+                        if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+                            // Look for user in database
+                            User.findOne({ _id: editUser }, function(err, user) {
+                                if (err) {
+                                    // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
+                                    var email = {
+                                        from: 'admin@keepinitcleanhousekeeping.com',
+                                        to: 'admin@keepinitcleanhousekeeping.com',
+                                        subject: 'Error Logged',
+                                        text: 'The following error has been reported in the Keepin It Clean website: ' + err,
+                                        html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
+                                    };
+                                    // Function to send e-mail to myself
+                                    client.sendMail(email, function(err, info) {
+                                        if (err) {
+                                            console.log(err); // If error with sending e-mail, log to console/terminal
+                                        } else {
+                                            console.log(info); // Log success message to console if sent
+                                            console.log(user.email); // Display e-mail that it was sent to
+                                        }
+                                    });
+                                    res.json({ success: false, message: 'Something went wrong. This error has been logged and will be addressed by our staff. We apologize for this inconvenience!' });
+                                } else {
+                                    // Check if user is in database
+                                    if (!user) {
+                                        res.json({ success: false, message: 'No user found' }); // Return error
+                                    } else {
+                                        user.lastname = newLastName; // Assign new name to user in database
+                                        // Save changes
+                                        user.save(function(err) {
+                                            if (err) {
+                                                console.log(err); // Log any errors to the console
+                                            } else {
+                                                res.json({ success: true, message: 'Name has been updated!' }); // Return success message
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            res.json({ success: false, message: 'Insufficient Permissions' }); // Return error
+                        }
+                    }
 
                     // Check if a change to username was requested
                     if (newUsername) {
@@ -918,8 +972,8 @@ module.exports = function(router) {
                                 if (err) {
                                     // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                                     var email = {
-                                        from: 'Keepin It Clean, cruiserweights@zoho.com',
-                                        to: 'gugui3z24@gmail.com',
+                                        from: 'admin@keepinitcleanhousekeeping.com',
+                                        to: 'admin@keepinitcleanhousekeeping.com',
                                         subject: 'Error Logged',
                                         text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                                         html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -965,8 +1019,8 @@ module.exports = function(router) {
                                 if (err) {
                                     // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                                     var email = {
-                                        from: 'Keepin It Clean, cruiserweights@zoho.com',
-                                        to: 'gugui3z24@gmail.com',
+                                        from: 'admin@keepinitcleanhousekeeping.com',
+                                        to: 'admin@keepinitcleanhousekeeping.com',
                                         subject: 'Error Logged',
                                         text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                                         html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
@@ -1012,8 +1066,8 @@ module.exports = function(router) {
                                 if (err) {
                                     // Create an e-mail object that contains the error. Set to automatically send it to myself for troubleshooting.
                                     var email = {
-                                        from: 'Keepin It Clean, cruiserweights@zoho.com',
-                                        to: 'gugui3z24@gmail.com',
+                                        from: 'admin@keepinitcleanhousekeeping.com',
+                                        to: 'admin@keepinitcleanhousekeeping.com',
                                         subject: 'Error Logged',
                                         text: 'The following error has been reported in the Keepin It Clean website: ' + err,
                                         html: 'The following error has been reported in the Keepin It Clean website:<br><br>' + err
