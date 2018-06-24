@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from '../login/login.component';
 import { UserComponent } from '../users/user.component';
-import { AuthGuard } from '../auth-guard.service';
+import { AuthGuard } from '../_services/auth-guard.service';
 import { ErrorPageComponent } from '../errorpage/errorpage.component';
 
 

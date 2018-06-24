@@ -4,9 +4,6 @@ public: username, password, name, email, phone, street address, city, state, not
 private: id, admin notes
 */
 
-
-
-
 var mongoose = require('mongoose'); // Import Mongoose Package
 var Schema = mongoose.Schema; // Assign Mongoose Schema function to variable
 var bcrypt = require('bcrypt-nodejs'); // Import Bcrypt Package
@@ -87,7 +84,7 @@ var UserSchema = new Schema({
     lastname: { type: String, required: true, validate: nameValidator },
     username: { type: String, lowercase: true, required: true, unique: true, validate: usernameValidator },
     password: { type: String, required: true, validate: passwordValidator, select: false },
-    email: { type: String, required: true, lowercase: true, unique: true, validate: emailValidator },
+    email: { type: String, required: true, lowercase: true }, //validate: emailValidator },
     phone: { type: Number, validate: phoneValidator},
     active: { type: Boolean, required: true, default: false },
     userid: { type: Number, required: true },

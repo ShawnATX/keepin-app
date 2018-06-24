@@ -1,13 +1,39 @@
-export class AuthService {
-    loggedIn = false;
-    login() {
-      this.loggedIn = true;
-    }
-    logout() {
-      this.loggedIn = false;
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+// import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import { appConfig } from '../app.config';
+
+@Injectable()
+export class AuthenticationService {
+    constructor(private http: HttpClient) { }
+
+    login(username: string, password: string) {
+        return this.http.post<any>(appConfig.apiUrl + '/users/authenticate', { username: username, password: password })
+            .map(user => {
+                // login successful if there's a jwt token in the response
+                if (user && user.token) {
+                    // store user details and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    console.log('local data added');
+                }
+
+                return user;
+            });
     }
 
-    isAuthenticated(){
-     //user = user;
+    logout() {
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
     }
-  }
+    isAuthenticated() {
+      const promise = new Promise(
+        (resolve, reject) => {
+          setTimeout(() => {
+            resolve(true);
+          }, 25);
+        }
+      );
+      return promise;
+    }
+}
