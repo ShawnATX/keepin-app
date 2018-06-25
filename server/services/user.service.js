@@ -7,10 +7,10 @@ var Q = require('q');
 
 mongoose.connect(config.connectionString);
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  // we're connected!
-});
+var User = require('../models/user.model');
+console.log(User);
+// db.on('error', console.rror.bind(console, 'connection error:'));
+// db.once('open', function() { // we're connected!});
 
 var service = {};
  
@@ -27,7 +27,7 @@ module.exports = service;
 function authenticate(username, password) {
     var deferred = Q.defer();
 
-    db.Users.findOne({ username: username }, function (err, user) {
+    User.findOne({ username: username }, function (err, user) {
         if (err) deferred.reject(err.name + ': ' + err.message);
 
         if (user && bcrypt.compareSync(password, user.hash)) {
@@ -56,41 +56,36 @@ function getById(userid) {
 
 }
 
-function create(userParam) {
+function create(userParams) {
+    console.log(userParams);
     var deferred = Q.defer();
-    console.log('user service create1');
+
  
     // validation
-    db.Users.findOne(
-        { username: userParam.username },
+    User.findOne(
+        { username: userParams.username },
         function (err, user) {
             if (err) deferred.reject(err.name + ': ' + err.message);
  
             if (user) {
                 // username already exists
-                deferred.reject('Username "' + userParam.username + '" is already taken');
+                deferred.reject('Username "' + userParams.username + '" is already taken');
             } else {
                 createUser();
             }
         });
- 
+    
     function createUser() {
         // set user object to userParam without the cleartext password
-        console.log('user service');
-        var user = _.omit(userParam, 'password');
- 
+        var cleanUser = _.omit(userParams, 'password');
         // add hashed password to user object
-        user.hash = bcrypt.hashSync(userParam.password, 10);
- 
-        db.Users.insert(
-            user,
-            function (err, doc) {
+        cleanUser.password = bcrypt.hashSync(userParams.password, 10);
+        var newUser = new User(cleanUser)
+        newUser.save(function (err, doc) {
                 if (err) deferred.reject(err.name + ': ' + err.message);
- 
                 deferred.resolve();
             });
     }
- 
     return deferred.promise;
 }
 

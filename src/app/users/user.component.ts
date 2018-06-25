@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../_models/user.model';
 import { UserService } from './user.service';
 import { AuthenticationService } from '../_services/auth.service';
+import { LoginComponent } from '../login/login.component';
 
-
-// import { UserService } from '../_services/UserService';
 
 @Component({
   selector: 'app-user',
@@ -13,6 +12,7 @@ import { AuthenticationService } from '../_services/auth.service';
 })
 export class UserComponent implements OnInit {
   currentUser: User;
+  model: any = {};
 
   constructor(private userservice: UserService,
               private authservice: AuthenticationService) { }
@@ -23,17 +23,35 @@ export class UserComponent implements OnInit {
     const testUser = new User;
     testUser.userid = '1';
     testUser.username = 'user1';
-    testUser.password = 'password';
+    testUser.password = 'password1';
     testUser.active = true;
     testUser.email = 'test@email.com';
     testUser.phone = '2815555555';
     testUser.firstname = 'Testy';
     testUser.lastname = 'McTesterson';
     testUser.permission = 'admin';
-    this.userservice.create(testUser);
-    console.log('test user created in Mongo');
+
+    this.userservice.create(testUser)
+            .subscribe(
+                data => {
+                    console.log('CREATED!!');
+                },
+                error => {
+                    console.log('Creation Error');
+                });
+    console.log('test user pushed');
   }
+
   testLogin() {
-    this.authservice.login('user1', 'password');
+    this.authservice.login('user1', 'password1')
+        .subscribe(
+            data => {
+                // this.router.navigate([this.returnUrl]);
+                console.log('LOGIN!!!!!!');
+            },
+            error => {
+                console.log('login error');
+            });
   }
+
 }

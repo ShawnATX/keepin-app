@@ -1,7 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { User } from '../_models/user.model';
-import {  } from '@angular/common/http'; 
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../app.config';
 
 @Injectable()
@@ -17,6 +16,8 @@ export class UserService {
     }
 
     create(user: User) {
+        console.log('Ng Service create');
+        console.log(user);
         return this.http.post(appConfig.apiUrl + '/users/register', user);
     }
 

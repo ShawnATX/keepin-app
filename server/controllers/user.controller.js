@@ -2,6 +2,7 @@ var config = require('config.json');
 var express = require('express');
 var router = express.Router();
 var userService = require('services/user.service');
+var User = require('../models/user.model');
 
 // routes
 router.post('/authenticate', authenticate);
@@ -30,6 +31,8 @@ function authenticate(req, res) {
 }
  
 function register(req, res) {
+    console.log('user controller');
+    console.log(req.body);
     userService.create(req.body)
         .then(function () {
             res.json('success');
@@ -38,6 +41,7 @@ function register(req, res) {
             res.status(400).send(err);
         });
 }
+
  
 function getAll(req, res) {
     userService.getAll()
