@@ -19,7 +19,7 @@ var UserSchema = new Schema({
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     username: { type: String, lowercase: true, required: true, unique: true, validate: usernameValidator },
-    password: { type: String, required: true, select: false },
+    passhash: { type: String, required: true },
     email: { type: String, required: true, lowercase: true }, //validate: emailValidator },
     phone: { type: Number },
     active: { type: Boolean, required: true, default: false },

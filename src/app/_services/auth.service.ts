@@ -9,15 +9,14 @@ export class AuthenticationService {
     constructor(private http: HttpClient) { }
 
     login(username: string, password: string) {
+        console.log('auth service logging in ' + username);
         return this.http.post<any>(appConfig.apiUrl + '/users/authenticate', { username: username, password: password })
             .map(user => {
                 // login successful if there's a jwt token in the response
                 if (user && user.token) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     localStorage.setItem('currentUser', JSON.stringify(user));
-                    console.log('local data added');
                 }
-
                 return user;
             });
     }

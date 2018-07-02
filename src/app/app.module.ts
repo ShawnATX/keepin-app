@@ -12,6 +12,7 @@ import { ErrorPageComponent } from './errorpage/errorpage.component';
 import { LoginComponent } from './login/login.component';
 import { PersonalinfoComponent } from './users/personal info/personalinfo.component';
 import { UserService } from './users/user.service';
+import { UpdateInfoComponent } from './users/updateinfo/updateinfo.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { UserService } from './users/user.service';
     RegisterComponent,
     ErrorPageComponent,
     LoginComponent,
-    PersonalinfoComponent
+    PersonalinfoComponent,
+    UpdateInfoComponent
   ],
   imports: [
     BrowserModule,

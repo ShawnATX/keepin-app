@@ -1,13 +1,19 @@
 <div class="row">
   <div class="col-md-6">
-    <h1>Hello user<!--  {{ currentUser.firstName }}-->!</h1>
+    <h1 *ngIf="currentUser" >Hello {{ currentUser.firstName }}</h1>
     <button class="btn btn-success" (click)="createTesty()">Add Testy</button>
     <button class="btn btn-success" (click)="testLogin()">Login as Testy</button>
+    <button class="btn btn-success" (click)="testLogout()">Log Out</button>
+    <button class="btn btn-success" (click)="testDelete()">Delete Testy</button>
   </div>
   
-  <div class="col-md-7 col-md-offset-6" id="myInfo">  <!-- user section with personal information -->
+  <div class="col-sm-5 " id="myInfo">  <!-- user section with personal information -->
     <app-personalinfo></app-personalinfo>
   </div>
+  <div class="col-sm-4" id="update">
+    <app-updateinfo [currentUser]="currentUser"></app-updateinfo>
+  </div>
+
 </div>
 <div class="row">
 

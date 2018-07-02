@@ -31,8 +31,6 @@ function authenticate(req, res) {
 }
  
 function register(req, res) {
-    console.log('user controller');
-    console.log(req.body);
     userService.create(req.body)
         .then(function () {
             res.json('success');

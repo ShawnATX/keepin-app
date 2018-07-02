@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../_models/user.model';
+import { UserLogin } from '../_models/user-login.model';
 import { UserService } from './user.service';
 import { AuthenticationService } from '../_services/auth.service';
-import { LoginComponent } from '../login/login.component';
-
 
 @Component({
   selector: 'app-user',
@@ -11,9 +10,9 @@ import { LoginComponent } from '../login/login.component';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  currentUser: User;
+  currentUser = UserLogin;
   model: any = {};
-
+ 
   constructor(private userservice: UserService,
               private authservice: AuthenticationService) { }
 
@@ -47,11 +46,29 @@ export class UserComponent implements OnInit {
         .subscribe(
             data => {
                 // this.router.navigate([this.returnUrl]);
-                console.log('LOGIN!!!!!!');
+                console.log('LOGIN!!!!!!' + data);
+                this.currentUser = data;
             },
             error => {
                 console.log('login error');
             });
+  }
+
+  testLogout() {
+    this.authservice.logout();
+    this.currentUser = null;
+  }
+
+
+  testDelete(){
+    this.userservice.delete('1')
+      .subscribe(
+          data => {
+            console.log('delete ' + data);
+          },
+          error => {
+              console.log('error deleting user ');
+          });
   }
 
 }
