@@ -28,7 +28,6 @@ function authenticate(username, password) {
         if (err) deferred.reject(err.name + ': ' + err.message);
         
         if (user && bcrypt.compare(password, user.passhash)) {
-          console.log(user.firstName + user.userid);
           // authentication successful
           deferred.resolve({
             userid: user.userid,
@@ -49,7 +48,6 @@ function getAll() {
 
 function getById(userid) {
     var deferred = Q.defer();
-
     User.findOne(
         { userid: userid },
         function (err, user){
@@ -57,7 +55,7 @@ function getById(userid) {
             if (user) {
                var _id = user._id;
                console.log(_id);
-               deferred.resolve(user._id);
+               deferred.resolve(user);
             }
         });    
     return deferred.promise;
@@ -68,7 +66,7 @@ function create(userParams) {
     // check if user already exists
     User.findOne(
         { username: userParams.username },
-        function (err, user) {  1
+        function (err, user) { 
             if (err) deferred.reject(err.name + ': ' + err.message);
             if (user) {
                 // username already exists
@@ -95,7 +93,38 @@ function create(userParams) {
 }
 
 function update(userid, userParam) {
+    var deferred = Q.defer();
+    User.findOne(
+        { userid: userid },
+        function (err, user) { 
+            if (err) deferred.reject(err.name + ': ' + err.message);
+            if (!user) {
+                // user does not exist
+                deferred.reject('User ID ' + userid + ' does not exist');
+            } else {
+                user = updateUser(user);
+                user.save();
+                deferred.resolve();
+            }
+        });
 
+  function updateUser(user){
+    if (userParam.firstname) user.firstname = userParam.firstname; // Check if a change to name was requested
+    if (userParam.lastname) user.lastname = userParam.lastname; // Check if a change to name was requested
+    if (userParam.username) user.usesrname = userParam.username; // Check if a change to username was requested
+    if (userParam.email) user.email = userParam.email; // Check if a change to e-mail was requested
+    if (userParam.phone) user.phone = userParam.phone; //  Check if a change to e-mail was requested
+    if (userParam.active) user.active = userParam.active; //  Check if a change to e-mail was requested
+    if (userParam.streetaddress) user.streetaddress = userParam.streetaddress; //  Check if a change to e-mail was requested
+    if (userParam.city) user.city = userParam.city; //  Check if a change to e-mail was requested
+    if (userParam.state) user.state = userParam.state; //  Check if a change to e-mail was requested
+    if (userParam.publicnotes) user.publicnotes = userParam.publicnotes; //  Check if a change to e-mail was requested
+    if (userParam.adminnotes) user.adminnotes = userParam.Adminnotes; //  Check if a change to e-mail was requested
+    if (userParam.permission) user.permission = userParam.permission; // Check if a change to permission was requested
+    return user;  
+  };
+  
+  return deferred.promise;
 }
 
 function _delete(userid) {
@@ -111,7 +140,7 @@ function _delete(userid) {
   console.log(_id);
   User.deleteOne( { userid: userid }, function (err) {
     if (err) deferred.reject(err.name + ': ' + err.message);
-    deferred.resolve();
+    deferred.resolve(_id);
   }); 
   return deferred.promise;
 }

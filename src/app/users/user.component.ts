@@ -10,9 +10,9 @@ import { AuthenticationService } from '../_services/auth.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  currentUser = UserLogin;
+  currentUser: UserLogin;
   model: any = {};
- 
+
   constructor(private userservice: UserService,
               private authservice: AuthenticationService) { }
 

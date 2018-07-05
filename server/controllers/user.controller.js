@@ -8,8 +8,8 @@ var User = require('../models/user.model');
 router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.get('/', getAll);
-router.get('/current', getCurrent);
-router.put('/:_id', update);
+router.get('/user/:userid', getCurrent);
+router.put('/:userid', update);
 router.delete('/:_id', _delete);
 
 module.exports = router;
@@ -66,7 +66,8 @@ function getCurrent(req, res) {
 }
  
 function update(req, res) {
-    userService.update(req.params._id, req.body)
+    console.log(req.body);
+    userService.update(req.params.userid, req.body)
         .then(function () {
             res.json('success');
         })

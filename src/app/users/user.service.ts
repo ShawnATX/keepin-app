@@ -1,11 +1,13 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Input } from '@angular/core';
 import { User } from '../_models/user.model';
+import { UserLogin } from '../_models/user-login.model';
 import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../app.config';
 
 @Injectable()
 export class UserService {
     constructor(private http: HttpClient) { }
+    @Input() UserLogin: UserLogin;
 
     getAll() {
         return this.http.get<User[]>(appConfig.apiUrl + '/users');
@@ -21,8 +23,9 @@ export class UserService {
         return this.http.post(appConfig.apiUrl + '/users/register', user);
     }
 
-    update(user: User) {
-        return this.http.put(appConfig.apiUrl + '/users/' + user.userid, user);
+    update(userid, userParams) {
+        console.log('update user service');
+        return this.http.put(appConfig.apiUrl + '/users/' + userid, userParams);
     }
 
     delete(userid: string) {

@@ -9,15 +9,61 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{{ currentUser.firstName }} {{ currentUser.lastName }}</h4>
+        <h4 class="modal-title" >{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h4>
       </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="updateUser()">Update</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+        <div class="modal-body"> 
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="form-group">
+                <label for="firstNnme">First Name</label>
+                  <input 
+                type="text" 
+                id="firstname" 
+                name="firstname"
+                class="form-control"
+                value="{{ currentUser?.firstname }}"
+                NgModel>
+              </div>
+              <div class="form-group">
+                <label for="lastname">Last Name</label>
+                  <input 
+                  type="text" 
+                  id="lastname" 
+                  name="lastname"
+                  class="form-control"
+                  NgModel>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="username">Username</label>
+                  <input 
+                  type="text" 
+                  id="username" 
+                  name="username"
+                  class="form-control"
+                  NgModel>
+              </div>
+              <div class="form-group">
+                  <label for="email">Email</label>
+                    <input 
+                    type="text" 
+                    id="email" 
+                    name="email"
+                    class="form-control"
+                    NgModel
+                    email>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="Submit" class="btn btn-primary">Update</button>
+        <div class="modal-footer">
+          
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
     </div>
 
   </div>
