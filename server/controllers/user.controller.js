@@ -8,7 +8,7 @@ var User = require('../models/user.model');
 router.post('/authenticate', authenticate);
 router.post('/register', register);
 router.get('/', getAll);
-router.get('/user/:userid', getCurrent);
+router.get('/:userid', getCurrent);
 router.put('/:userid', update);
 router.delete('/:_id', _delete);
 
@@ -19,7 +19,7 @@ function authenticate(req, res) {
         .then(function (user) {
             if (user) {
                 // authentication successful
-                res.send(user);
+                res.send(user.token);
             } else {
                 // authentication failed
                 res.status(400).send('Username or password is incorrect');

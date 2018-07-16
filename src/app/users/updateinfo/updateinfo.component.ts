@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../../_models/user.model';
 import { UserLogin } from '../../_models/user-login.model';
 import { UserService } from '../user.service';
-import { FormsModule } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-updateinfo',
@@ -11,24 +11,28 @@ import { FormsModule } from '@angular/forms';
 })
 export class UpdateInfoComponent implements OnInit {
   @Input() currentUser: UserLogin;
-  userdetails: User;
+  public user = [];
 
-  constructor( private userservice: UserService ) {  }
+  constructor( private userservice: UserService ) { 
+   }
 
   ngOnInit() {
-    this.getUser()
+    this.userservice.getById(this.currentUser.token)
     .subscribe(
       data => {
-        console.log('Got User' + data);
+        console.log(data);
+        // this.user = data;
       },
       error => {
-          console.log('Update Error');
+        console.log('error getting user data');
       });
+   }
+
+  onSubmit(form: NgForm) {
+    console.log(form.value);
+    this.updateUser(this.currentUser.token, form.value);
   }
 
-  onSubmit(form: HTMLFormElement) {
-    this.updateUser(this.currentUser.userid, form.value.firstname);
-  }
   updateUser(userid, userParams) {
     console.log('update user component');
     this.userservice.update(userid, userParams)
@@ -41,8 +45,8 @@ export class UpdateInfoComponent implements OnInit {
       });
   }
 
-  getUser() {
-    return this.userservice.getById(this.currentUser.userid);
+  getUser(userid) {
+    return this.userservice.getById(userid);
 
   }
 

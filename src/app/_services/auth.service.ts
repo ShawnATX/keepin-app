@@ -9,15 +9,15 @@ export class AuthenticationService {
     constructor(private http: HttpClient) { }
 
     login(username: string, password: string) {
-        console.log('auth service logging in ' + username);
+        // console.log('auth service logging in ' + username);
         return this.http.post<any>(appConfig.apiUrl + '/users/authenticate', { username: username, password: password })
-            .map(user => {
+            .map(userToken => {
                 // login successful if there's a jwt token in the response
-                if (user && user.token) {
+                if (userToken) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('currentUser', JSON.stringify(userToken));
                 }
-                return user;
+                return userToken;
             });
     }
 
@@ -26,13 +26,13 @@ export class AuthenticationService {
         localStorage.removeItem('currentUser');
     }
     isAuthenticated() {
-      const promise = new Promise(
-        (resolve, reject) => {
-          setTimeout(() => {
-            resolve(true);
-          }, 25);
-        }
-      );
-      return promise;
+    //   const promise = new Promise(
+    //     (resolve, reject) => {
+    //       if (localStorage.getItem('currentUser')) {
+    //         resolve(true);
+    //       } else {
+    //         reject();
+    //       });
+    //   return promise;
     }
 }

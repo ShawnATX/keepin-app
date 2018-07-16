@@ -30,10 +30,6 @@ function authenticate(username, password) {
         if (user && bcrypt.compare(password, user.passhash)) {
           // authentication successful
           deferred.resolve({
-            userid: user.userid,
-            username: user.username,
-            firstName: user.firstname,
-            lastName: user.lastname,
             token: jwt.sign({ sub: user.userid }, config.secret)
           });
         };
@@ -57,7 +53,7 @@ function getById(userid) {
                console.log(_id);
                deferred.resolve(user);
             }
-        });    
+        });
     return deferred.promise;
 };
 

@@ -3,6 +3,7 @@ import { User } from '../_models/user.model';
 import { UserLogin } from '../_models/user-login.model';
 import { UserService } from './user.service';
 import { AuthenticationService } from '../_services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -10,14 +11,24 @@ import { AuthenticationService } from '../_services/auth.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  currentUser: UserLogin;
+  loggedInUser = UserLogin;
   model: any = {};
 
   constructor(private userservice: UserService,
-              private authservice: AuthenticationService) { }
+              private authservice: AuthenticationService,
+              private router: Router) { }
 
   ngOnInit() {
+    this.loggedInUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!this.loggedInUser) {
+      this.loginRedirect();
+    }
   }
+
+  private loginRedirect() {
+    this.router.navigate(['/login']);
+  }
+
   createTesty() {
     const testUser = new User;
     testUser.userid = '1';
@@ -46,8 +57,8 @@ export class UserComponent implements OnInit {
         .subscribe(
             data => {
                 // this.router.navigate([this.returnUrl]);
-                console.log('LOGIN!!!!!!' + data);
-                this.currentUser = data;
+                console.log('LOGIN token is' + data);
+                this.loggedInUser = data;
             },
             error => {
                 console.log('login error');
@@ -56,7 +67,7 @@ export class UserComponent implements OnInit {
 
   testLogout() {
     this.authservice.logout();
-    this.currentUser = null;
+    this.loggedInUser = null;
   }
 
 
